@@ -1,8 +1,8 @@
 {
-  "name": "node-intermediate",
+  "name": "najiarchitec",
   "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@github.com:modolee/node-intermediate.git",
+  "main": "app.js",
+  "repository": "https://github.com/jiyoon-na/najiArchitec.git",
   "author": "modolee <modolee.si@gmail.com>",
   "license": "MIT",
   "type": "module",
