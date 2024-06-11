@@ -4,78 +4,83 @@ import { MESSAGES } from '../constants/message.constant.js';
 import { createResumeValidator } from '../middlewares/validators/create-resume-validator.middleware.js';
 import { prisma } from '../utils/prisma.util.js';
 import { updateResumeValidator } from '../middlewares/validators/updated-resume-validator.middleware.js';
+// ResumesController를 인스턴스화 시킴
+import { ResumesController } from '../controllers/resumes.controller.js';
 
 const resumesRouter = express.Router();
 
+const resumesController = new resumesController();
+
 // 이력서 생성
-resumesRouter.post('/', createResumeValidator, async (req, res, next) => {
-  try {
-    const user = req.user;
-    const { title, content } = req.body;
-    const authorId = user.id;
+//이게 맞나..? 만약 이 주소로 요청이 오면 resumesController에 있는 createResume 실행
+resumesRouter.post('/', resumesController.createResumes ,createResumeValidator, async (req, res, next) => {
+  // try {
+  //   const user = req.user;
+  //   const { title, content } = req.body;
+  //   const authorId = user.id;
 
-    const data = await prisma.resume.create({
-      data: {
-        authorId,
-        title,
-        content,
-      },
-    });
+  //   const data = await prisma.resume.create({
+  //     data: {
+  //       authorId,
+  //       title,
+  //       content,
+  //     },
+  //   });
 
-    return res.status(HTTP_STATUS.CREATED).json({
-      status: HTTP_STATUS.CREATED,
-      message: MESSAGES.RESUMES.CREATE.SUCCEED,
-      data,
-    });
-  } catch (error) {
-    next(error);
-  }
+  //   return res.status(HTTP_STATUS.CREATED).json({
+  //     status: HTTP_STATUS.CREATED,
+  //     message: MESSAGES.RESUMES.CREATE.SUCCEED,
+  //     data,
+  //   });
+  // } catch (error) {
+  //   next(error);
+  // }
 });
 
 // 이력서 목록 조회
-resumesRouter.get('/', async (req, res, next) => {
-  try {
-    const user = req.user;
-    const authorId = user.id;
+resumesRouter.get('/', resumesController.getResumes , async (req, res, next) => {
+  // try {
+  //   const user = req.user;
+  //   const authorId = user.id;
 
-    let { sort } = req.query;
+  //   let { sort } = req.query;
 
-    sort = sort?.toLowerCase();
+  //   sort = sort?.toLowerCase();
 
-    if (sort !== 'desc' && sort !== 'asc') {
-      sort = 'desc';
-    }
+  //   if (sort !== 'desc' && sort !== 'asc') {
+  //     sort = 'desc';
+  //   }
 
-    let data = await prisma.resume.findMany({
-      where: { authorId },
-      orderBy: {
-        createdAt: sort,
-      },
-      include: {
-        author: true,
-      },
-    });
+  //   let data = await prisma.resume.findMany({
+  //     where: { authorId },
+  //     orderBy: {
+  //       createdAt: sort,
+  //     },
+  //     include: {
+  //       author: true,
+  //     },
+  //   });
 
-    data = data.map((resume) => {
-      return {
-        id: resume.id,
-        authorName: resume.author.name,
-        title: resume.title,
-        content: resume.content,
-        status: resume.status,
-        createdAt: resume.createdAt,
-        updatedAt: resume.updatedAt,
-      };
-    });
+  //   data = data.map((resume) => {
+  //     return {
+  //       id: resume.id,
+  //       authorName: resume.author.name,
+  //       title: resume.title,
+  //       content: resume.content,
+  //       status: resume.status,
+  //       createdAt: resume.createdAt,
+  //       updatedAt: resume.updatedAt,
+  //     };
+  //   });
 
-    return res.status(HTTP_STATUS.OK).json({
-      status: HTTP_STATUS.OK,
-      message: MESSAGES.RESUMES.READ_LIST.SUCCEED,
-      data,
-    });
-  } catch (error) {
-    next(error);
-  }
+  //   return res.status(HTTP_STATUS.OK).json({
+  //     status: HTTP_STATUS.OK,
+  //     message: MESSAGES.RESUMES.READ_LIST.SUCCEED,
+  //     data,
+  //   });
+  // } catch (error) {
+  //   next(error);
+  // }
 });
 
 // 이력서 상세 조회
