@@ -4,16 +4,17 @@ import { MESSAGES } from '../constants/message.constant.js';
 import { createResumeValidator } from '../middlewares/validators/create-resume-validator.middleware.js';
 import { prisma } from '../utils/prisma.util.js';
 import { updateResumeValidator } from '../middlewares/validators/updated-resume-validator.middleware.js';
-// ResumesController를 인스턴스화 시킴
+// 2. ResumesController를 인스턴스화 시킴 :export로 받아온 이름과 일치
 import { ResumesController } from '../controllers/resumes.controller.js';
 
 const resumesRouter = express.Router();
-
-const resumesController = new resumesController();
-
+//3. class사용해서 인스턴스 만들 때 새로운 인스턴스로 만들고, 인스턴스 받은 변수이름은 소문자로 
+const resumesController = new ResumesController();
+console.log("ResumesController--->", resumesController)
+console.log("ResumesController.createResume--->", resumesController.createResume)
 // 이력서 생성
 //이게 맞나..? 만약 이 주소로 요청이 오면 resumesController에 있는 createResume 실행
-resumesRouter.post('/', resumesController.createResumes ,createResumeValidator, async (req, res, next) => {
+resumesRouter.post('/', resumesController.createResume ,createResumeValidator, async (req, res, next) => {
   // try {
   //   const user = req.user;
   //   const { title, content } = req.body;
@@ -36,7 +37,8 @@ resumesRouter.post('/', resumesController.createResumes ,createResumeValidator, 
   //   next(error);
   // }
 });
-
+console.log("resumesController--->", resumesController)
+console.log("resumesController.getResumes-->", resumesController.getResumes)
 // 이력서 목록 조회
 resumesRouter.get('/', resumesController.getResumes , async (req, res, next) => {
   // try {
@@ -84,47 +86,47 @@ resumesRouter.get('/', resumesController.getResumes , async (req, res, next) => 
 });
 
 // 이력서 상세 조회
-resumesRouter.get('/:id', async (req, res, next) => {
-  try {
-    const user = req.user;
-    const authorId = user.id;
+resumesRouter.get('/:id', resumesController.getResume ,async (req, res, next) => {
+  // try {
+  //   const user = req.user;
+  //   const authorId = user.id;
 
-    const { id } = req.params;
+  //   const { id } = req.params;
 
-    let data = await prisma.resume.findUnique({
-      where: { id: +id, authorId },
-      include: { author: true },
-    });
+  //   let data = await prisma.resume.findUnique({
+  //     where: { id: +id, authorId },
+  //     include: { author: true },
+  //   });
 
-    if (!data) {
-      return res.status(HTTP_STATUS.NOT_FOUND).json({
-        status: HTTP_STATUS.NOT_FOUND,
-        message: MESSAGES.RESUMES.COMMON.NOT_FOUND,
-      });
-    }
+  //   if (!data) {
+  //     return res.status(HTTP_STATUS.NOT_FOUND).json({
+  //       status: HTTP_STATUS.NOT_FOUND,
+  //       message: MESSAGES.RESUMES.COMMON.NOT_FOUND,
+  //     });
+  //   }
 
-    data = {
-      id: data.id,
-      authorName: data.author.name,
-      title: data.title,
-      content: data.content,
-      status: data.status,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt,
-    };
+  //   data = {
+  //     id: data.id,
+  //     authorName: data.author.name,
+  //     title: data.title,
+  //     content: data.content,
+  //     status: data.status,
+  //     createdAt: data.createdAt,
+  //     updatedAt: data.updatedAt,
+  //   };
 
-    return res.status(HTTP_STATUS.OK).json({
-      status: HTTP_STATUS.OK,
-      message: MESSAGES.RESUMES.READ_DETAIL.SUCCEED,
-      data,
-    });
-  } catch (error) {
-    next(error);
-  }
+  //   return res.status(HTTP_STATUS.OK).json({
+  //     status: HTTP_STATUS.OK,
+  //     message: MESSAGES.RESUMES.READ_DETAIL.SUCCEED,
+  //     data,
+  //   });
+  // } catch (error) {
+  //   next(error);
+  // }
 });
 
 // 이력서 수정
-resumesRouter.put('/:id', updateResumeValidator, async (req, res, next) => {
+resumesRouter.put('/:id', resumesController.updateResume ,updateResumeValidator, async (req, res, next) => {
   try {
     const user = req.user;
     const authorId = user.id;
@@ -163,7 +165,7 @@ resumesRouter.put('/:id', updateResumeValidator, async (req, res, next) => {
 });
 
 // 이력서 삭제
-resumesRouter.delete('/:id', async (req, res, next) => {
+resumesRouter.delete('/:id', resumesController.deleteResume ,async (req, res, next) => {
   try {
     const user = req.user;
     const authorId = user.id;
