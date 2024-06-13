@@ -13,7 +13,9 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-
+//모델이름은 대문자 User
+//프리즈마 사용하기 위해서 모델이름에서 첫번째글자 대문자-> 소문자
+//사용법 prisma.user.findUnique
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
@@ -23,7 +25,7 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   resumes   Resume[]
-
+//map은 mysql db의 테이블 이름, 테이블 연관관계 때 씀
   @@map("users")
 }
 

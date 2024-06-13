@@ -19,6 +19,7 @@ yarn
 ```
 
 - DB 테이블 생성
+
 ```sh
 yarn prisma db push
 ```
@@ -44,6 +45,7 @@ npm install
 ```
 
 - DB 테이블 생성
+
 ```sh
 npx prisma db push
 ```
@@ -67,3 +69,10 @@ https://modolee.notion.site/78aef426bed046338ee76802132e847c
 # ERD
 
 https://drawsql.app/teams/team-modolee/diagrams/sparta-node-advanced
+
+---
+
+### 호출순서
+
+controller -> service -> repository -> db
+서비스 호출 : 서비스 호출(을 사용하고 있는 주체)하는 것은 컨트롤러
